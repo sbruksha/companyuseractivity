@@ -25,28 +25,16 @@ class DynamoDbDataService {
         let docClient = new AWS.DynamoDB.DocumentClient();
         let fromdate = new Date(new Date().setDate(new Date().getDate()-31));
         let todate = new Date();
-        // const params = {
-        //     TableName : this.tableName,
-        //     Limit: this.numberOfItems,
-        //     KeyConditionExpression: "#endpoint = :companyValue and #date BETWEEN :date1 AND :date2",
-        //     ExpressionAttributeNames:{
-        //         "#endpoint": "endpoint",
-        //         "#date": "date"
-        //     },
-        //     ExpressionAttributeValues: {
-        //         ":companyValue": data.endpoint,
-        //         ":date1": fromdate.toISOString(),
-        //         ":date2": todate.toISOString()
-        //     }
-        // };
+
         var params = {
             TableName: this.tableName,
-            ProjectionExpression: "#dt, #c, #n, endpoint",
+            ProjectionExpression: "#dt, #c, #n, #ispur, endpoint",
             FilterExpression: "#c = :companyValue and #dt BETWEEN :date1 AND :date2",
             ExpressionAttributeNames: {
                 "#dt": "date",
                 "#c": "company",
-                "#n": "name"
+                "#n": "name",
+                "#ispur": "ispurchased"
             },
             ExpressionAttributeValues: {
                 ":companyValue": data.company,
@@ -96,10 +84,9 @@ class DynamoDbDataService {
      */
     update(body){
         return new Promise((resolve, reject)=>{
-        var item;
+
         let data = JSON.parse(body);
         let docClient = new AWS.DynamoDB.DocumentClient();
-        let docClient1 = new AWS.DynamoDB.DocumentClient();
         let fromdate = new Date(new Date().setDate(new Date().getDate()-15));
         let todate = new Date();
         const params = {
