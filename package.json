@@ -1,0 +1,44 @@
+{
+  "name": "companyuseractivity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "companyuseractivity.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:dev:uswest2": "npm run deploy:dev -- -r us-west-2",
+    "deploy:dev:sg": "npm run deploy:dev -- -r ap-southeast-1",
+    "remove:dev": "serverless remove --stage dev",
+    "remove:dev:uswest2": "npm run remove:dev -- -r us-west-2",
+    "remove:dev:sg": "npm run remove:dev -- -r ap-southeast-1",
+    "uselocaldb": "USE_LOCAL_DYNAMODB=true AWS_DEFAULT_REGION=us-west-2",
+    "setawsregion:uswest2": "AWS_DEFAULT_REGION=us-west-2",
+    "invoke:getUserActivity": "serverless invoke local -f getUserActivity",
+    "invoke:getUserActivity:uswest2": "npm run setawsregion:uswest2 npm run invoke:getUserActivity",
+    "invoke:getUserActivity:ondblocal": "npm run uselocaldb npm run invoke:getUserActivity"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+﻿https://github.com/sbruksha/companyuseractivity.git"
+  },
+  "keywords": [
+    "Serverless",
+    "Lambda",
+    "DynamoDB"
+  ],
+  "author": "Sergiy Bruksha",
+  "license": "ISC",
+  "bugs": {
+    "url": "﻿https://github.com/sbruksha/companyuseractivity/issues"
+  },
+  "homepage": "https://push.notification.marketing",
+  "dependencies": {
+    "ajv": "^5.0.0-beta.1",
+    "aws-sdk": "^2.7.15",
+    "uuid": "^2.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}
