@@ -41,20 +41,27 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  getUserActivity:
-    handler: companyuseractivity.fetch
+  getCompanyUserActivity:
+    handler: companyuseractivity.fetchbycompany
     events:
      - http:
-        path: companyuseractivity/fetch
+        path: companyuseractivity/fetchbycompany
         method: post
         cors: true
-  createUserActivity:
+  addToCart:
     handler: companyuseractivity.create
     events:
      - http:
         path: companyuseractivity/create
         method: post
         cors: true
+  purchaseCart:
+      handler: companyuseractivity.update
+      events:
+       - http:
+          path: companyuseractivity/update
+          method: post
+          cors: true
 resources:
   Resources:
     CompanyUserActivity:
@@ -87,6 +94,8 @@ resources:
                 - dynamodb:Scan
                 - dynamodb:PutItem
                 - dynamodb:Query
+                - dynamodb:Update
+                - dynamodb:UpdateItem
               Resource: arn:aws:dynamodb:*:*:table/CompanyUserActivity
         Roles:
           - Ref: IamRoleLambdaExecution

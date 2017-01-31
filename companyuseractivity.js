@@ -5,23 +5,19 @@ let DynamoDbDataService = services.DynamoDbDataService;
 let CompanyUserActivityValidationService = services.CompanyUserActivityValidationService;
 
 /**
- * Invoked when HTTP GET Event is triggered on /CompanyUserActivity/fetch endpoint.
+ * Invoked when HTTP POST Event is triggered on /CompanyUserActivity/fetchbycompany endpoint.
  */
-module.exports.fetch = (event, context, callback) => {
+module.exports.fetchbycompany = (event, context, callback) => {
   const requestPayload = event.body;
 
   const TABLE_NAME = 'CompanyUserActivity';
   const NUMBER_OF_ITEMS = 100;
   let dynamoDbDataService = new DynamoDbDataService(TABLE_NAME, NUMBER_OF_ITEMS);
 
-  dynamoDbDataService.getAll(requestPayload)
-      .then((results) => {
+  dynamoDbDataService.fetchbycompany(requestPayload).then((results) => {
     const response = {
       statusCode: 200,
-      // HERE'S THE CRITICAL PART
-      headers: {
-        "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
-      },
+      headers: { "Access-Control-Allow-Origin" : "*" },
       body: JSON.stringify(results),
     };
 
@@ -53,10 +49,7 @@ module.exports.create = (event, context, callback) => {
   dynamoDbDataService.create(requestPayload).then((results) => {
     const response = {
       statusCode: 200,
-      // HERE'S THE CRITICAL PART
-      headers: {
-        "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
-      },
+      headers: { "Access-Control-Allow-Origin" : "*" },
       body: "Added item: "+JSON.stringify(results, null, 2),
     };
 
@@ -64,5 +57,34 @@ module.exports.create = (event, context, callback) => {
   }).catch((error) => {
     callback(error);
   });
+}
+
+/**
+ * Invoked when HTTP POST Event is triggered on /CompanyUserActivity/update endpoint.
+ */
+module.exports.update = (event, context, callback) => {
+  const requestPayload = event.body;
+
+  //Do simple validation to check fields
+  const blogValidation = new CompanyUserActivityValidationService(requestPayload);
+  if (!blogValidation.validate()){
+    return callback(blogValidation.error);
+  }
+
+  const TABLE_NAME = 'CompanyUserActivity';
+  const NUMBER_OF_ITEMS = 100;
+  let dynamoDbDataService = new DynamoDbDataService(TABLE_NAME, NUMBER_OF_ITEMS);
+
+  dynamoDbDataService.update(requestPayload).then((results) => {
+    const response = {
+      statusCode: 200,
+      headers: { "Access-Control-Allow-Origin" : "*" },
+      body: "Updated item: "+JSON.stringify(results, null, 2),
+    };
+
+  callback(null, response);
+}).catch((error) => {
+    callback(error);
+});
 
 }

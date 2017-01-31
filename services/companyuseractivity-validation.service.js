@@ -22,7 +22,8 @@ class CompanyUserActivityValidationService {
                 "company": fieldSchema,
                 "name": fieldSchema,
                 "code": fieldSchema,
-                "url": fieldSchema
+                "url": fieldSchema,
+                "ispurchased": fieldSchema
             }
         };
     }
@@ -37,9 +38,7 @@ class CompanyUserActivityValidationService {
         this.error = null;
         if (!isValid) {
             // Transform each of 
-            const errorMessage =
-                validate.errors.map( error => this.transformAjvError(error) )
-        .join('\n\r');
+            const errorMessage = validate.errors.map( error => this.transformAjvError(error) ).join('\n\r');
             this.error = new Error(errorMessage);
         }
         return isValid;
