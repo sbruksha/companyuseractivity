@@ -41,11 +41,18 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  getCompanyUserActivity:
-    handler: companyuseractivity.fetchbycompany
+  getAllActivityByDate:
+      handler: companyuseractivity.fetchbydate
+      events:
+       - http:
+          path: companyuseractivity/fetchbydate
+          method: post
+          cors: true
+  getAllActivity:
+    handler: companyuseractivity.fetchall
     events:
      - http:
-        path: companyuseractivity/fetchbycompany
+        path: companyuseractivity/fetchall
         method: post
         cors: true
   addToCart:

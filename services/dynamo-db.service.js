@@ -18,7 +18,7 @@ class DynamoDbDataService {
     /**
      * Retrieve all company activities for last 30 days
      */
-    fetchbycompany(body){
+    fetchall(body){
         return new Promise((resolve, reject)=>{
 
         const data = JSON.parse(body);
@@ -47,7 +47,37 @@ class DynamoDbDataService {
          });
         });
     }
+    /**
+     * Retrieve all company activities for date range
+     */
+    fetchbydate(body){
+        return new Promise((resolve, reject)=>{
+        const data = JSON.parse(body);
+        let docClient = new AWS.DynamoDB.DocumentClient();
+        let fromdate = new Date(date.fromdate);
+        let todate = new Date(date.todate);
 
+        var params = {
+            TableName: this.tableName,
+            ProjectionExpression: "#dt, #c, #n, #ispur, endpoint",
+            FilterExpression: "#c = :companyValue and #dt BETWEEN :date1 AND :date2",
+            ExpressionAttributeNames: {
+                "#dt": "date",
+                "#c": "company",
+                "#n": "name",
+                "#ispur": "ispurchased"
+            },
+            ExpressionAttributeValues: {
+                ":companyValue": data.company,
+                ":date1": fromdate.toISOString(),
+                ":date2": todate.toISOString()
+            }
+        };
+        docClient.scan(params, (err, data) => {
+            if (err){ reject(err); }else{ resolve(data.Items); }
+    });
+    });
+    }
     /**
      * create item 
      */
