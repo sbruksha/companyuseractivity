@@ -54,8 +54,8 @@ class DynamoDbDataService {
         return new Promise((resolve, reject)=>{
         const data = JSON.parse(body);
         let docClient = new AWS.DynamoDB.DocumentClient();
-        let fromdate = new Date(date.fromdate);
-        let todate = new Date(date.todate);
+        let fromdate = new Date(data.fromdate);
+        let todate = new Date(data.todate);
 
         var params = {
             TableName: this.tableName,
